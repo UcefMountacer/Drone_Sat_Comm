@@ -1,13 +1,4 @@
 
-'''
-to add : 
-
-send_capabilties_request
-play_tune
-send_calibrate_gyro
-send_calibrate_magnetometer
-
-'''
 
 import time
 from dronekit import connect, VehicleMode, LocationGlobalRelative, Command, LocationGlobal
