@@ -1,6 +1,6 @@
 
 import requests
-
+import json
 
 def get_from_TS():
 
@@ -11,4 +11,45 @@ def get_from_TS():
     while r.status_code != 200:
         r = requests.get(Thingspeak_Channel)
 
-    return r
+    dataDict = decode_TS_msg(r)
+
+    return dataDict
+
+
+def decode_TS_msg(r):
+
+    '''
+    decode urllib message into dictionnary containing usable data
+    '''
+
+    def decode_hex(hexstring):
+
+        '''
+        decode a hex string into ascii string
+        '''
+
+        string = bytes.fromhex(hexstring)
+        stringList = string.decode("ascii")
+        List = eval(stringList)
+
+        return List
+
+    ''' decode the whole msg'''
+    dataJson = json.loads(r.text)
+    # status = dataJson['channel']
+    data = dataJson['feeds'][0]
+
+    # decode status. Example below
+    # dict_keys(['id', 'name', 'latitude', 'longitude',
+    # 'field1','field8', 'created_at', 'updated_at', 'last_entry_id'])
+
+    dataDict = {}
+
+    dataDict['id'] = data['id']
+    dataDict['transmit_time'] = data['field4']
+    dataDict['lat'] = data['field5']
+    dataDict['lat'] = data['field6']
+    dataDict['data'] = decode_hex(data['field8'])  # the mavlink command data list
+                                                   
+
+    return dataDict

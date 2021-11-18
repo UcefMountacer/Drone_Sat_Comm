@@ -38,15 +38,15 @@ if __name__ == "__main__":
     # starting serious communication from QGC
     while 1:
 
-        QGC_msg = forward_from_QGC(conn)   # mavlink message
+        QGC_msg_HexCode = receive_from_QGC(conn)   # mavlink message
         
-        post_to_rock7(QGC_msg)
+        post_to_rock7(QGC_msg_HexCode)
 
-        ROCK_msg = get_from_TS()
+        ROCK_msg_DICT = get_from_TS()
 
-        ROCK_msg_mav = convert_to_MAVLink(ROCK_msg)
+        MAVlink_msg_list = convert_to_MAVLink(ROCK_msg_DICT)
 
-        forward_to_QGC(ROCK_msg_mav, v)
+        forward_to_QGC(MAVlink_msg_list, v)
 
         # repeat
 
