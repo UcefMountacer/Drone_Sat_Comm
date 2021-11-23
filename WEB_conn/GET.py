@@ -16,13 +16,43 @@ def get_from_TS():
     return dataDict
 
 
+
+def decode_TS_msg(r):
+
+    '''
+    decode urllib message into data for mavlink buffer
+    '''
+
+    def decode(hexstring):
+
+        '''
+        decode a hex string into ascii string
+        '''
+
+        string = bytes.fromhex(hexstring)
+        stringList = string.decode("ascii")
+        List = eval(stringList)
+
+        return List
+
+    ''' decode the whole msg'''
+    dataJson = json.loads(r.text)
+    data = dataJson['feeds'][0]
+
+    mavData = decode(data['field8'])  # the mavlink command data list
+                                                   
+    return mavData
+
+
+# LEGACY
+
 def decode_TS_msg(r):
 
     '''
     decode urllib message into dictionnary containing usable data
     '''
 
-    def decode_hex(hexstring):
+    def decode(hexstring):
 
         '''
         decode a hex string into ascii string
@@ -49,7 +79,7 @@ def decode_TS_msg(r):
     dataDict['transmit_time'] = data['field4']
     dataDict['lat'] = data['field5']
     dataDict['lat'] = data['field6']
-    dataDict['data'] = decode_hex(data['field8'])  # the mavlink command data list
+    dataDict['data'] = decode(data['field8'])  # the mavlink command data list
                                                    
 
     return dataDict

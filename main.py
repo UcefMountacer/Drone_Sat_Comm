@@ -35,18 +35,19 @@ if __name__ == "__main__":
     message = get_from_TS()
     print(message)
 
-    # starting serious communication from QGC
+    # starting communication from drone to QGC
+
     while 1:
+
+        ROCK_msg = get_from_TS()
+
+        MAVlink_msg_list = convert_to_MAVLink(ROCK_msg)
+
+        forward_to_QGC(MAVlink_msg_list, v)
 
         QGC_msg_HexCode = receive_from_QGC(conn)   # mavlink message
         
         post_to_rock7(QGC_msg_HexCode)
-
-        ROCK_msg_DICT = get_from_TS()
-
-        MAVlink_msg_list = convert_to_MAVLink(ROCK_msg_DICT)
-
-        forward_to_QGC(MAVlink_msg_list, v)
 
         # repeat
 

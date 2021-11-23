@@ -59,38 +59,25 @@ def receive_from_QGC(udp_conn):
 def convert_msg_to_hexcode(msg):
 
     '''
-    LEGACY
-    takes msg from QGC in dict format 
-    {'mavpackettype': 'TERRAIN_DATA', 'lat': -353747690, 'lon': 1491554539, 'grid_spacing': 100, 'gridbit': 0, 'data': [635, 627, 626, 626, 630, 623, 621, 622, 623, ...]}
-    return msg that can be sent to rockblock
-    '''
-
-    # LEGACY
-    # dict_msg = msg.to_dict()
-    # data = str(dict_msg)
-    # code = data.encode().hex()
-
-    '''
     receive msg from QGC in mavlink 
     get msgbuf (byte array)
     send values
     '''
 
     try:
-        Buffer = msg._msgbuf
-        # MAVmsglist = MAV.parse_buffer(msg._msgbuf)
-        # MAVmsglist is an python array.array('B',[10,2,5,...])
+        Buffer = msg._msgbuf   # get buffer data (which construct the mavlink message)
+        
     except:
         pass
 
-    msgList = list(Buffer)
-    data = str(msgList)
-    code = data.encode().hex()
+    msgList = list(Buffer)         # get data list as a list of integers
+    data = str(msgList)            # get string of list
+    code = data.encode().hex()     # encode as hex
 
     return code
 
 
-def convert_to_MAVLink(msgDICT):
+def convert_to_MAVLink(data):
 
     '''
     convert message that is in a dict format
@@ -101,8 +88,9 @@ def convert_to_MAVLink(msgDICT):
     rejection_counter = 0
     MAVlink_msg_list = []
 
-    MavList = msgDICT['data']
+    MavList = data #msgDICT['data']
     MavArray = array('B',MavList)
+
     try:
         MavCommandList = MAV.parse_buffer(MavArray)
     except:
