@@ -83,3 +83,5 @@ you should see some data. Change parameters to your channel if you use a one tha
 
 Thingspeak_Channel = 'https://api.thingspeak.com/channels/1564907/feeds.json?api_key=XYZ&results=1'
 
+PS: XYZ is your secret api key.
+
