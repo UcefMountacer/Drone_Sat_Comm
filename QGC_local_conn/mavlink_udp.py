@@ -52,11 +52,11 @@ def receive_from_QGC(udp_conn):
 
     if qgc_msg != None:
         
-        code = convert_msg_to_hexcode(qgc_msg)
+        code = convert_msg(qgc_msg)
 
         return code
 
-def convert_msg_to_hexcode(msg):
+def convert_msg(msg):
 
     '''
     receive msg from QGC in mavlink 
@@ -72,9 +72,9 @@ def convert_msg_to_hexcode(msg):
 
     msgList = list(Buffer)         # get data list as a list of integers
     data = str(msgList)            # get string of list
-    code = data.encode().hex()     # encode as hex
+    # code = data.encode().hex()     # encode as hex
 
-    return code
+    return data # send as string
 
 
 def convert_to_MAVLink(data):
@@ -116,31 +116,31 @@ def convert_to_MAVLink(data):
 '''
 LEGACY
 '''
-def filter_QGC_msgs(qgc_msg):
+# def filter_QGC_msgs(qgc_msg):
 
-    if qgc_msg.get_type() == 'MANUAL_CONTROL':
+#     if qgc_msg.get_type() == 'MANUAL_CONTROL':
 
-        print("\n\n*****Got message: %s*****" % qgc_msg.get_type())
-        print("Message: %s" % qgc_msg)
-        print("\nAs dictionary: %s" % qgc_msg.to_dict())
+#         print("\n\n*****Got message: %s*****" % qgc_msg.get_type())
+#         print("Message: %s" % qgc_msg)
+#         print("\nAs dictionary: %s" % qgc_msg.to_dict())
 
-    if qgc_msg.get_type() == 'HEARTBEAT':
+#     if qgc_msg.get_type() == 'HEARTBEAT':
 
-        print("\n\n*****Got message: %s*****" % qgc_msg.get_type())
-        print("Message: %s" % qgc_msg)
-        print("\nAs dictionary: %s" % qgc_msg.to_dict())
+#         print("\n\n*****Got message: %s*****" % qgc_msg.get_type())
+#         print("Message: %s" % qgc_msg)
+#         print("\nAs dictionary: %s" % qgc_msg.to_dict())
 
-    if qgc_msg.get_type() == 'MANUAL_CONTROL':
+#     if qgc_msg.get_type() == 'MANUAL_CONTROL':
 
-        print("\n\n*****Got message: %s*****" % qgc_msg.get_type())
-        print("Message: %s" % qgc_msg)
-        print("\nAs dictionary: %s" % qgc_msg.to_dict())
+#         print("\n\n*****Got message: %s*****" % qgc_msg.get_type())
+#         print("Message: %s" % qgc_msg)
+#         print("\nAs dictionary: %s" % qgc_msg.to_dict())
 
-    if qgc_msg.get_type() == 'MANUAL_CONTROL':
+#     if qgc_msg.get_type() == 'MANUAL_CONTROL':
 
-        print("\n\n*****Got message: %s*****" % qgc_msg.get_type())
-        print("Message: %s" % qgc_msg)
-        print("\nAs dictionary: %s" % qgc_msg.to_dict())
+#         print("\n\n*****Got message: %s*****" % qgc_msg.get_type())
+#         print("Message: %s" % qgc_msg)
+#         print("\nAs dictionary: %s" % qgc_msg.to_dict())
 
-        # + other things that depend on the actual filter
-        # make a function per filter
+#         # + other things that depend on the actual filter
+#         # make a function per filter

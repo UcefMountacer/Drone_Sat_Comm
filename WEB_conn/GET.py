@@ -46,40 +46,40 @@ def decode_TS_msg(r):
 
 # LEGACY
 
-def decode_TS_msg(r):
+# def decode_TS_msg(r):
 
-    '''
-    decode urllib message into dictionnary containing usable data
-    '''
+#     '''
+#     decode urllib message into dictionnary containing usable data
+#     '''
 
-    def decode(hexstring):
+#     def decode(hexstring):
 
-        '''
-        decode a hex string into ascii string
-        '''
+#         '''
+#         decode a hex string into ascii string
+#         '''
 
-        string = bytes.fromhex(hexstring)
-        stringList = string.decode("ascii")
-        List = eval(stringList)
+#         string = bytes.fromhex(hexstring)
+#         stringList = string.decode("ascii")
+#         List = eval(stringList)
 
-        return List
+#         return List
 
-    ''' decode the whole msg'''
-    dataJson = json.loads(r.text)
-    # status = dataJson['channel']
-    data = dataJson['feeds'][0]
+#     ''' decode the whole msg'''
+#     dataJson = json.loads(r.text)
+#     # status = dataJson['channel']
+#     data = dataJson['feeds'][0]
 
-    # decode status. Example below
-    # dict_keys(['id', 'name', 'latitude', 'longitude',
-    # 'field1','field8', 'created_at', 'updated_at', 'last_entry_id'])
+#     # decode status. Example below
+#     # dict_keys(['id', 'name', 'latitude', 'longitude',
+#     # 'field1','field8', 'created_at', 'updated_at', 'last_entry_id'])
 
-    dataDict = {}
+#     dataDict = {}
 
-    dataDict['id'] = data['id']
-    dataDict['transmit_time'] = data['field4']
-    dataDict['lat'] = data['field5']
-    dataDict['lat'] = data['field6']
-    dataDict['data'] = decode(data['field8'])  # the mavlink command data list
+#     dataDict['id'] = data['id']
+#     dataDict['transmit_time'] = data['field4']
+#     dataDict['lat'] = data['field5']
+#     dataDict['lat'] = data['field6']
+#     dataDict['data'] = decode(data['field8'])  # the mavlink command data list
                                                    
 
-    return dataDict
+#     return dataDict

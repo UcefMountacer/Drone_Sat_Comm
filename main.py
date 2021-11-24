@@ -45,9 +45,9 @@ if __name__ == "__main__":
 
         forward_to_QGC(MAVlink_msg_list, v)
 
-        QGC_msg_HexCode = receive_from_QGC(conn)   # mavlink message
+        QGC_msg = receive_from_QGC(conn)   # mavlink message
         
-        post_to_rock7(QGC_msg_HexCode)
+        post_to_rock7(QGC_msg)
 
         # repeat
 

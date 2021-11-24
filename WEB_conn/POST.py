@@ -2,7 +2,7 @@
 
 import requests
 
-def post_to_rock7(hexCode):
+def post_to_rock7(Code):
 
     iridium_url = 'https://rockblock.rock7.com/rockblock/MT'
     iridium_local_port = 45679
@@ -10,7 +10,7 @@ def post_to_rock7(hexCode):
     username = 'nicolai.valenti@gmail.com'
     password = 'thisisamomentarypass'
 
-    url = iridium_url + "?imei=" + imei + "&username=" + "nicolai.valenti%40gmail.com" + "&username=" + username + "&password=" + password + "&password=" + password +"&data=" + hexCode
+    url = iridium_url + "?imei=" + imei + "&username=" + "nicolai.valenti%40gmail.com" + "&username=" + username + "&password=" + password + "&password=" + password +"&data=" + Code
     headers = {"Accept": "text/plain"}
     response = requests.request("POST", url, headers=headers)
 
