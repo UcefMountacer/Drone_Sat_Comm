@@ -46,8 +46,6 @@ while (True):
 
     else:
         print(qgc_msg)
-        msg = vehicle.message_factory.command_long_encode(0,1,mavutil.mavlink)
-        vehicle.send_mavlink(msg)
 
     
     

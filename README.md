@@ -9,9 +9,11 @@ connect rock7 web service to your application via thingspeak
 pip3 install dronekit 
 pip3 install pymavlink
 pip3 install requests
-pip3 install dronekit-sitl -UI
-Besides, install qgroundcontrol
+sudo -H pip3 install dronekit-sitl
 ```
+
+Besides, install qgroundcontrol
+
 
 ## **QGroundControl**
 

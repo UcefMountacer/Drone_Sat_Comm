@@ -20,27 +20,35 @@ def connect_to_relay_vehicle(address = '127.0.0.1:5760'):
     vehicle = connect('tcp:' + address, wait_ready=True)
     return vehicle
 
-def start_connection(relay_vehicle, udp = '127.0.0.1:10000'):
+# def start_connection(relay_vehicle, udp = '127.0.0.1:10000'):
 
-    '''
-    start local connection between dummy vehicle
-    and QGC
-    '''
+#     '''
+#     start local connection between dummy vehicle
+#     and QGC
+#     '''
 
-    udp_conn = MAVConnection('udpin:' + udp, source_system=1)
-    udp_conn.master.mav.srcComponent = 1
-    relay_vehicle._handler.pipe(udp_conn)
-    udp_conn.start()
+#     udp_conn = MAVConnection('udpin:' + udp, source_system=1)
+#     udp_conn.master.mav.srcComponent = 1
+#     relay_vehicle._handler.pipe(udp_conn)
+#     udp_conn.start()
 
+#     return udp_conn
+
+def start_qgc_connection(udp = '127.0.0.1:10000'):
+
+    udp_conn = mavutil.mavlink_connection('udpout:' + udp, source_system=1)
     return udp_conn
 
-def forward_to_QGC(MAVlink_msg_list, relay_vehicle):
+
+def forward_to_QGC(MAVlink_msg_list, conn):
 
     '''
     send messages the mavlink message to QGC
     '''
     for msg in MAVlink_msg_list:
-        relay_vehicle.send_mavlink(msg)
+        conn.mav.send(msg)
+
+    
 
 def receive_from_QGC(udp_conn):
 
@@ -48,7 +56,7 @@ def receive_from_QGC(udp_conn):
     receive mavlink messages from QGC through conn connection
     '''
 
-    qgc_msg = udp_conn.master.recv_msg()
+    qgc_msg = udp_conn.recv_msg()
 
     if qgc_msg != None:
         
