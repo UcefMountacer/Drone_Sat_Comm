@@ -1,16 +1,18 @@
 
 import imaplib
 import email
+import struct
 
 USER = 'heimdallrock7'
 PASS = 'thisisamomentarypass'
 
 def process(data):
     
-    List = bytes.fromhex(data).decode("ASCII")
-    # l = eval(List)
+    data = bytes.fromhex(data)
+    _, data = struct.unpack("I", data[:4]), data[4:]
+    l = eval(data.decode())
 
-    return List
+    return l
 
 def get_from_gmail():
 
@@ -34,11 +36,15 @@ def get_from_gmail():
     
     string = email_message.items()[0][1]
     l = string.split('\\n')
-    Data = l[78][6:-2]
 
-    Data = process(Data)
+    if any("Data" in s for s in l):
 
-    return Data
+        i = [idx for idx, s in enumerate(l) if 'Data' in s][0]
+        Data = l[i][6:-2]
+        Data = process(Data)
+        return Data
+    else:
+        return None
 
 
 a = get_from_gmail()
