@@ -46,29 +46,7 @@ Then run tests/test_local_conn_sitl.py code
 If everything works fine, you'll see that there is a vehicle on QGC ready to fly, you can even simulate flying it. 
 
 
-## **Thingspeak**
-
-This part is where you'll create a thingspeak account, channel and get http address to send your data from rock7.
-
-1- create channel
-
-<img src="images/1.png" width="500" height="300">
-
-2- edit channel settings
-
-<img src="images/2.png" width="500" height="300">
-
-3- get thingspeak http address
-
-<img src="images/3.png" width="500" height="300">
-
-4- add to delivery groups
-
-<img src="images/4.png" width="500" height="300">
-
-
-
-## **POSTing to rockblock**
+## **POST to rockblock**
 
 run tests/test_post.py
 
@@ -77,7 +55,7 @@ run tests/test_post.py
 Check rock7 messages for the message.
 
 
-## **GET from thingspeak**
+## **GET from gmail**
 
 `python3 tests/test_get.py`
 

@@ -1,45 +1,45 @@
 
-import requests
-import json
+import imaplib
+import email
 
-def decode_TS_msg(r):
+USER = 'heimdallrock7'
+PASS = 'thisisamomentarypass'
 
-    '''
-    decode urllib message into data for mavlink buffer
-    '''
+def process(data):
+    
+    List = bytes.fromhex(data).decode("ASCII")
+    # l = eval(List)
 
-    def decode(hexstring):
+    return List
 
-        '''
-        decode a hex string into ascii string
-        '''
+def get_from_gmail():
 
-        string = bytes.fromhex(hexstring)
-        stringList = string.decode("ascii")
-        List = eval(stringList)
+    mail = imaplib.IMAP4_SSL('imap.gmail.com')
+    user = USER
+    password = PASS
+    mail.login(user+'@gmail.com', password)
+    mail.list()
 
-        return List
+    # Out: list of "folders" aka labels in gmail.
+    mail.select("inbox") # connect to inbox.
+    result, data = mail.search(None, "ALL")
+    ids = data[0] # data is a list.
+    id_list = ids.split() # ids is a space separated string
+    latest_email_id = id_list[-1] # get the latest
+    # fetch the email body (RFC822) for the given ID
+    result, data = mail.fetch(latest_email_id, "(RFC822)") 
+    raw_email = data[0][1] # here's the body, which is raw text of the whole email
+    # including headers and alternate payloads
+    email_message = email.message_from_string(str(raw_email))
+    
+    string = email_message.items()[0][1]
+    l = string.split('\\n')
+    Data = l[78][6:-2]
 
-    ''' decode the whole msg'''
-    dataJson = json.loads(r.text)
-    data = dataJson['feeds'][0]
+    Data = process(Data)
 
-    mavData = decode(data['field8'])  # the mavlink command data list
-                                                   
-    return mavData
+    return Data
 
-Thingspeak_Channel = 'https://api.thingspeak.com/channels/1564907/feeds.json?api_key=8BLZ5AGLP8AL9H2L&results=1'
 
-r = requests.get(Thingspeak_Channel)
-
-status = json.loads(r.text)['channel']
-data = json.loads(r.text)['feeds'][0]  # a dictionary containing the fields with their values
-
-# print(r,'\n')
-# print(status, '\n')
-# print(data)
-
-d = decode_TS_msg(r)
-
-print(d)
-
+a = get_from_gmail()
+print(a)

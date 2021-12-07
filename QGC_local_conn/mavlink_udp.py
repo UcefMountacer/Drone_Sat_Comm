@@ -7,32 +7,6 @@ from pymavlink import mavlink
 from array import array
 MAV = mavlink.MAVLink(0)
 
-def connect_to_relay_vehicle(address = '127.0.0.1:5760'):
-
-    '''
-    vehicle SITL instance to communicate with QGC locally
-    Nothing less, nothing more
-
-    address : str : ip address and port of SITL drone
-            default : 127.0.0.1:5760
-    '''
-
-    vehicle = connect('tcp:' + address, wait_ready=True)
-    return vehicle
-
-# def start_connection(relay_vehicle, udp = '127.0.0.1:10000'):
-
-#     '''
-#     start local connection between dummy vehicle
-#     and QGC
-#     '''
-
-#     udp_conn = MAVConnection('udpin:' + udp, source_system=1)
-#     udp_conn.master.mav.srcComponent = 1
-#     relay_vehicle._handler.pipe(udp_conn)
-#     udp_conn.start()
-
-#     return udp_conn
 
 def start_qgc_connection(udp = '127.0.0.1:10000'):
 
@@ -49,7 +23,6 @@ def forward_to_QGC(MAVlink_msg_list, conn):
         conn.mav.send(msg)
 
     
-
 def receive_from_QGC(udp_conn):
 
     '''
@@ -63,6 +36,7 @@ def receive_from_QGC(udp_conn):
         code = convert_msg(qgc_msg)
 
         return code
+
 
 def convert_msg(msg):
 
@@ -80,9 +54,8 @@ def convert_msg(msg):
 
     msgList = list(Buffer)         # get data list as a list of integers
     data = str(msgList)            # get string of list
-    # code = data.encode().hex()     # encode as hex
 
-    return data # send as string
+    return data 
 
 
 def convert_to_MAVLink(data):
@@ -96,8 +69,7 @@ def convert_to_MAVLink(data):
     rejection_counter = 0
     MAVlink_msg_list = []
 
-    MavList = data #msgDICT['data']
-    MavArray = array('B',MavList)
+    MavArray = array('B',data)
 
     try:
         MavCommandList = MAV.parse_buffer(MavArray)
@@ -119,36 +91,3 @@ def convert_to_MAVLink(data):
 
     return MAVlink_msg_list
 
-
-    
-'''
-LEGACY
-'''
-# def filter_QGC_msgs(qgc_msg):
-
-#     if qgc_msg.get_type() == 'MANUAL_CONTROL':
-
-#         print("\n\n*****Got message: %s*****" % qgc_msg.get_type())
-#         print("Message: %s" % qgc_msg)
-#         print("\nAs dictionary: %s" % qgc_msg.to_dict())
-
-#     if qgc_msg.get_type() == 'HEARTBEAT':
-
-#         print("\n\n*****Got message: %s*****" % qgc_msg.get_type())
-#         print("Message: %s" % qgc_msg)
-#         print("\nAs dictionary: %s" % qgc_msg.to_dict())
-
-#     if qgc_msg.get_type() == 'MANUAL_CONTROL':
-
-#         print("\n\n*****Got message: %s*****" % qgc_msg.get_type())
-#         print("Message: %s" % qgc_msg)
-#         print("\nAs dictionary: %s" % qgc_msg.to_dict())
-
-#     if qgc_msg.get_type() == 'MANUAL_CONTROL':
-
-#         print("\n\n*****Got message: %s*****" % qgc_msg.get_type())
-#         print("Message: %s" % qgc_msg)
-#         print("\nAs dictionary: %s" % qgc_msg.to_dict())
-
-#         # + other things that depend on the actual filter
-#         # make a function per filter

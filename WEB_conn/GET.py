@@ -1,85 +1,44 @@
 
-import requests
-import json
 
-def get_from_TS():
+import imaplib
+import email
 
-    Thingspeak_Channel = 'https://api.thingspeak.com/channels/1564907/feeds.json?api_key=8BLZ5AGLP8AL9H2L&results=2'
-    status_channel = 'https://api.thingspeak.com/channels/1564907/status.json?api_key=8BLZ5AGLP8AL9H2L'
-    r = requests.get(Thingspeak_Channel)
+USER = 'youssef.05.ex'
+PASS = 'ex5556'
 
-    while r.status_code != 200:
-        r = requests.get(Thingspeak_Channel)
+def get_from_gmail():
 
-    dataDict = decode_TS_msg(r)
+    mail = imaplib.IMAP4_SSL('imap.gmail.com')
+    user = USER
+    password = PASS
+    mail.login(user+'@gmail.com', password)
+    mail.list()
 
-    return dataDict
+    # Out: list of "folders" aka labels in gmail.
+    mail.select("inbox") # connect to inbox.
+    result, data = mail.search(None, "ALL")
+    ids = data[0] # data is a list.
+    id_list = ids.split() # ids is a space separated string
+    latest_email_id = id_list[-1] # get the latest
+    # fetch the email body (RFC822) for the given ID
+    result, data = mail.fetch(latest_email_id, "(RFC822)") 
+    raw_email = data[0][1] # here's the body, which is raw text of the whole email
+    # including headers and alternate payloads
+    email_message = email.message_from_string(str(raw_email))
+    
+    string = email_message.items()[0][1]
+    l = string.split('\\n')
+    Data = l[78][6:-2]
+
+    return process(Data)
 
 
-
-def decode_TS_msg(r):
+def process(data):
 
     '''
-    decode urllib message into data for mavlink buffer
+    convert hex to string of list then list
     '''
+    stringList = bytes.fromhex(data).decode("ASCII")
+    list = eval(stringList)
 
-    def decode(hexstring):
-
-        '''
-        decode a hex string into ascii string
-        '''
-
-        string = bytes.fromhex(hexstring)
-        stringList = string.decode("ascii")
-        List = eval(stringList)
-
-        return List
-
-    ''' decode the whole msg'''
-    dataJson = json.loads(r.text)
-    data = dataJson['feeds'][0]
-
-    mavData = decode(data['field8'])  # the mavlink command data list
-                                                   
-    return mavData
-
-
-# LEGACY
-
-# def decode_TS_msg(r):
-
-#     '''
-#     decode urllib message into dictionnary containing usable data
-#     '''
-
-#     def decode(hexstring):
-
-#         '''
-#         decode a hex string into ascii string
-#         '''
-
-#         string = bytes.fromhex(hexstring)
-#         stringList = string.decode("ascii")
-#         List = eval(stringList)
-
-#         return List
-
-#     ''' decode the whole msg'''
-#     dataJson = json.loads(r.text)
-#     # status = dataJson['channel']
-#     data = dataJson['feeds'][0]
-
-#     # decode status. Example below
-#     # dict_keys(['id', 'name', 'latitude', 'longitude',
-#     # 'field1','field8', 'created_at', 'updated_at', 'last_entry_id'])
-
-#     dataDict = {}
-
-#     dataDict['id'] = data['id']
-#     dataDict['transmit_time'] = data['field4']
-#     dataDict['lat'] = data['field5']
-#     dataDict['lat'] = data['field6']
-#     dataDict['data'] = decode(data['field8'])  # the mavlink command data list
-                                                   
-
-#     return dataDict
+    return list

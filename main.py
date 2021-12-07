@@ -1,20 +1,5 @@
 
 
-'''
-                  (DRONE)
-(pixhawk) <==> (jetson Nano) <==> (rockblock) <*********> [Rock7]
-                                                            ||
-                                                            ||
-                                                            ||
-                            [Ground Station] <*******> [ThingSpeak]
-                                   ||
-                                   ||
-                                   ||
-                  (dummy vehicle) <==> (QGroundControl)               
-
-'''
-
-
 from QGC_local_conn.mavlink_udp import *
 from WEB_conn.GET import *
 from WEB_conn.POST import *
@@ -26,30 +11,19 @@ if __name__ == "__main__":
 
     conn = start_qgc_connection(udp = '127.0.0.1:10000')
 
-    # inititating communication between 2 parties
-    print('posting a Hello Drone message to the drone')
-    post_to_rock7('Hello Drone')
-    print('awaiting response from drone')  # a hello back message 
-                                           # to be programmed on the other board
-    message = get_from_TS()
-    print(message)
-
     # starting communication from drone to QGC
 
     while 1:
 
-        ROCK_msg = get_from_TS()
+        ROCK_msg_list = get_from_gmail()
 
-        MAVlink_msg_list = convert_to_MAVLink(ROCK_msg)
+        MAVlink_msg_list = convert_to_MAVLink(ROCK_msg_list)
 
         forward_to_QGC(MAVlink_msg_list, conn)
 
         QGC_msg = receive_from_QGC(conn)   # mavlink message
         
         post_to_rock7(QGC_msg)
-
-        # repeat
-
 
         
 
