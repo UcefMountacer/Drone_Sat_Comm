@@ -41,10 +41,18 @@ def get_from_gmail():
 
         i = [idx for idx, s in enumerate(l) if 'Data' in s][0]
         Data = l[i][6:-2]
-        Data = process(Data)
-        return Data
+
+        # if no payload
+        try:
+
+            Data = process(Data)
+            return Data
+
+        except ValueError:
+            return 'No payload'
+
     else:
-        return None
+        return 'No recent rockblock msg'
 
 
 a = get_from_gmail()

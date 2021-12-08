@@ -14,19 +14,25 @@ def start_qgc_connection(udp = '127.0.0.1:10000'):
     return udp_conn
 
 
-def forward_to_QGC(MAVlink_msg_list, conn):
+def forward_to_QGC(MAVlink_msg_list, udp_conn):
 
     '''
-    send messages the mavlink message to QGC
+    send the mavlink messages list to QGC through udp connection
     '''
+    if MAVlink_msg_list == 'No Mavlink':
+
+        # Nothing
+        return 0
+
     for msg in MAVlink_msg_list:
-        conn.mav.send(msg)
+        udp_conn.mav.send(msg)
+        return 1
 
     
 def receive_from_QGC(udp_conn):
 
     '''
-    receive mavlink messages from QGC through conn connection
+    receive mavlink messages from QGC through udp connection
     '''
 
     qgc_msg = udp_conn.recv_msg()
@@ -41,38 +47,40 @@ def receive_from_QGC(udp_conn):
 def convert_msg(msg):
 
     '''
-    receive msg from QGC in mavlink 
-    get msgbuf (byte array)
-    send values
+    get msgbuf (byte array) of mavlink msg
+    as a list
     '''
 
     try:
-        Buffer = msg._msgbuf   # get buffer data (which construct the mavlink message)
-        
+        Buffer = msg._msgbuf        # get buffer data (which construct 
+                                    # the mavlink message)
     except:
         pass
 
-    msgList = list(Buffer)         # get data list as a list of integers
-    data = str(msgList)            # get string of list
+    msgList = list(Buffer)          # get data list as a list of integers
+    data = str(msgList)             # get string of list
 
-    return data 
+    return data                     # return string of list, use eval to get list again
 
 
-def convert_to_MAVLink(data):
+def convert_to_MAVLink(stringList):
 
     '''
-    convert message that is in a dict format
+    convert message that is a string of list
     to a mavlink command
-    the actual command is in a dict key
     '''
 
-    rejection_counter = 0
-    MAVlink_msg_list = []
+    if stringList == 'No payload' or stringList == 'No recent rockblock msg':
+        # exit
+        return 'No Mavlink'
 
-    MavArray = array('B',data)
+    rejection_counter = 0                              # rejection counter 
+                                                       # for manual control
+    MAVlink_msg_list = []
+    MavArray = array('B',stringList)                   
 
     try:
-        MavCommandList = MAV.parse_buffer(MavArray)
+        MavCommandList = MAV.parse_buffer(MavArray)    # get messgaes   
     except:
         pass
 

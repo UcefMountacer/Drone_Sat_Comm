@@ -3,10 +3,27 @@
 import imaplib
 import email
 
-USER = 'youssef.05.ex'
-PASS = 'ex5556'
+USER = 'heimdallrock7'
+PASS = 'thisisamomentarypass'
+
+def process(data):
+
+    '''
+    convert hexstring to string of list then to list
+    '''
+
+    stringList = bytes.fromhex(data).decode("ASCII")
+    list = eval(stringList)
+
+    return list
 
 def get_from_gmail():
+
+    '''
+    get email body
+    get the Data field
+    process the data into list
+    '''
 
     mail = imaplib.IMAP4_SSL('imap.gmail.com')
     user = USER
@@ -28,17 +45,21 @@ def get_from_gmail():
     
     string = email_message.items()[0][1]
     l = string.split('\\n')
-    Data = l[78][6:-2]
+    
+    if any("Data" in s for s in l):
 
-    return process(Data)
+        i = [idx for idx, s in enumerate(l) if 'Data' in s][0]
+        Data = l[i][6:-2]
 
+        # if no payload
+        try:
 
-def process(data):
+            Data = process(Data)
+            return Data
 
-    '''
-    convert hex to string of list then list
-    '''
-    stringList = bytes.fromhex(data).decode("ASCII")
-    list = eval(stringList)
+        except ValueError:
+            return 'No payload'
 
-    return list
+    else:
+        return 'No recent rockblock msg'
+
