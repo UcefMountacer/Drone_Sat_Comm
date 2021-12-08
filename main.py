@@ -19,6 +19,8 @@ if __name__ == "__main__":
 
         MAVlink_msg_list = convert_to_MAVLink(ROCK_msg_list)
 
+        print(MAVlink_msg_list)
+
         sending_to_QGC = forward_to_QGC(MAVlink_msg_list, conn)
 
         QGC_msg = receive_from_QGC(conn)   
