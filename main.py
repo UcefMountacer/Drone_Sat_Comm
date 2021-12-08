@@ -31,7 +31,7 @@ if __name__ == "__main__":
         print('sending to rockblock status   : ', bool(posting_to_rock7) , '\n')
 
         # delay 15 sec
-        # time.sleep(15)
+        time.sleep(5)
         counter = counter + 1
 
         
