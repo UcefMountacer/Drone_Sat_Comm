@@ -10,7 +10,7 @@ MAV = mavlink.MAVLink(0)
 vehicle = connect('tcp:127.0.0.1:5760', wait_ready=True)
 
 # start a mavlink upd 
-udp_conn = MAVConnection('udpin:127.0.0.1:10000', source_system=1)
+udp_conn = MAVConnection('0.0.0.0') #, baud = 57600)
 
 # connect the vehcile to this udp port
 vehicle._handler.pipe(udp_conn)
@@ -24,17 +24,19 @@ udp_conn.start()
 
 while True:
 
-    rejection_counter = 0
+    # rejection_counter = 0
     # receive messages
     qgc_msg = udp_conn.master.recv_msg()
 
-    # check if message is not None, or manual or hb (many of them)
-    if qgc_msg == None : 
-        pass
+    print(qgc_msg)
 
-    else:
-        #msg received, send response to QGC
-        print(qgc_msg)
-        ping = vehicle.message_factory.ping_encode(1000,1,255,1) # prepare a PING to QGC
-        vehicle.send_mavlink(ping)
+    # check if message is not None, or manual or hb (many of them)
+    # if qgc_msg == None : 
+    #     pass
+
+    # else:
+    #     #msg received, send response to QGC
+    #     print(qgc_msg)
+    #     ping = vehicle.message_factory.ping_encode(1000,1,255,1) # prepare a PING to QGC
+    #     vehicle.send_mavlink(ping)
 

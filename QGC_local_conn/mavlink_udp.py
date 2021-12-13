@@ -10,7 +10,7 @@ MAV = mavlink.MAVLink(0)
 
 def start_qgc_connection(udp = '127.0.0.1:10000'):
 
-    udp_conn = mavutil.mavlink_connection('udpout:' + udp, source_system=1)
+    udp_conn = mavutil.mavlink_connection('udpout:' + udp, source_system=1, source_component=1)
     return udp_conn
 
 

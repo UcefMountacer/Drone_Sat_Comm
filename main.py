@@ -12,6 +12,7 @@ if __name__ == "__main__":
     print('starting connection to QGC \n')
 
     conn = start_qgc_connection(udp = '127.0.0.1:10000')
+    conn.wait_heartbeat()
 
     while 1:
 
@@ -25,6 +26,8 @@ if __name__ == "__main__":
 
         QGC_msg = receive_from_QGC(conn)   
 
+        print(QGC_msg)
+
         posting_to_rock7 = post_to_rock7(QGC_msg)
 
         # print status
@@ -33,7 +36,7 @@ if __name__ == "__main__":
         print('sending to rockblock status   : ', bool(posting_to_rock7) , '\n')
 
         # delay 15 sec
-        time.sleep(5)
+        time.sleep(15)
         counter = counter + 1
 
         

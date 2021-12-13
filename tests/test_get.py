@@ -9,7 +9,7 @@ PASS = 'thisisamomentarypass'
 def process(data):
     
     data = bytes.fromhex(data)
-    _, data = struct.unpack("I", data[:4]), data[4:]
+    # _, data = struct.unpack("I", data[:4]), data[4:]
     l = eval(data.decode())
 
     return l
