@@ -63,39 +63,45 @@ def convert_msg(msg):
     return data                     # return string of list, use eval to get list again
 
 
-def convert_to_MAVLink(stringList):
+def convert_to_MAVLink(List, HEARTBEAT):
 
     '''
     convert message that is a string of list
     to a mavlink command
     '''
 
-    if stringList == 'No payload' or stringList == 'No recent rockblock msg':
+    if List == 'No payload' or List == 'No recent rockblock msg':
         # exit
         return 'No Mavlink'
 
-    rejection_counter = 0                              # rejection counter 
-                                                       # for manual control
-    MAVlink_msg_list = []
-    MavArray = array('B',stringList)                   
+    # check if it's a HB or message w/ previous HB
+    if (List[5] == 0 and HEARTBEAT == 0) or HEARTBEAT == 1:
+        HEARTBEAT = 1
+        
+        # continue with conversion
 
-    try:
-        MavCommandList = MAV.parse_buffer(MavArray)    # get messgaes   
-    except:
-        pass
+        rejection_counter = 0                              # rejection counter 
+                                                        # for manual control
+        MAVlink_msg_list = []
+        MavArray = array('B',List)                   
 
-    try:
-        if MavCommandList is not None:
-            for msg in MavCommandList:
-                if (msg.get_msgId() == 69):
-                    rejection_counter += 1
+        try:
+            MavCommandList = MAV.parse_buffer(MavArray)    # get messgaes   
+        except:
+            pass
 
-                    if rejection_counter == 100:
-                        rejection_counter = 0
-                        print('Blocking MANUAL_CONTROL message')
-                MAVlink_msg_list.append(msg)
-    except:
-        pass
+        try:
+            if MavCommandList is not None:
+                for msg in MavCommandList:
+                    if (msg.get_msgId() == 69):
+                        rejection_counter += 1
 
-    return MAVlink_msg_list
+                        if rejection_counter == 100:
+                            rejection_counter = 0
+                            print('Blocking MANUAL_CONTROL message')
+                    MAVlink_msg_list.append(msg)
+        except:
+            pass
+
+        return MAVlink_msg_list
 
