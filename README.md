@@ -1,5 +1,7 @@
 # HEIMDALL-PROJECT / GS part
-connect rock7 web service to your application via thingspeak
+connect drone to QGroundControl via satellite communication
+
+<img src="images/p.png" width="900" height="500">
 
 # setting up sat communication on ground station (Running Ubuntu)
 
